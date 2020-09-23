@@ -1,16 +1,23 @@
 package org.acme.microprofile.graphql;
 
 import io.quarkus.test.junit.QuarkusTest;
+import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.is;
 
 @QuarkusTest
 public class FilmResourceTest {
+
+    @BeforeAll
+    static void setupAll() {
+        RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
+    }
 
     @Test
     public void allFilms() {
@@ -18,24 +25,26 @@ public class FilmResourceTest {
         String requestBody =
                 "{\"query\":" +
                         "\"" +
-                            "{" +
-                                " allFilms  {" +
+                        "{" +
+                        " Films { " +
+                        "           allFilms  {" +
                                     " title" +
                                     " director" +
                                     " releaseDate" +
                                     " episodeID" +
-                                  "}" +
+                                "}" +
                             "}" +
+                        "}" +
                         "\"" +
-                "}";
+                        "}";
 
         given()
                 .body(requestBody)
                 .post("/graphql/")
                 .then()
                 .contentType(ContentType.JSON)
-                .body("data.allFilms.size()", is(3))
-                .body("data.allFilms.director", hasItem("George Lucas"))
+                .body("data.Films.allFilms.size()", is(3))
+                .body("data.Films.allFilms.director", hasItem("George Lucas"))
                 .statusCode(200);
     }
 
@@ -45,24 +54,26 @@ public class FilmResourceTest {
         String requestBody =
                 "{\"query\":" +
                         "\"" +
-                            "{" +
-                                "film (filmId: 1)  {" +
-                                    " title" +
-                                    " director" +
-                                    " releaseDate" +
-                                    " episodeID" +
-                                "}" +
-                            "}" +
+                        "{" +
+                        " Films { " +
+                        "film (filmId: 1)  {" +
+                        " title" +
+                        " director" +
+                        " releaseDate" +
+                        " episodeID" +
+                        "}" +
+                        "}" +
+                        "}" +
                         "\"" +
-                "}";
+                        "}";
 
         given()
                 .body(requestBody)
                 .post("/graphql/")
                 .then()
                 .contentType(ContentType.JSON)
-                .body("data.size()", is(1))
-                .body("data.film.director", is("George Lucas"))
+                .body("data.Films.size()", is(1))
+                .body("data.Films.film.director", is("George Lucas"))
                 .statusCode(200);
     }
 
@@ -72,29 +83,29 @@ public class FilmResourceTest {
         String requestBody =
                 "{\"query\":" +
                         "\"" +
-                            "{" +
-                                "film (filmId: 0)  {" +
-                                    " title" +
-                                    " director" +
-                                    " releaseDate" +
-                                    " episodeID" +
-                                    " heroes { " +
-                                        "name" +
-                                    "}" +
-                                "}" +
-                            "}" +
+                        "{" +
+                        "Films {film (filmId: 0)  {" +
+                        " title" +
+                        " director" +
+                        " releaseDate" +
+                        " episodeID" +
+                        " heroes { " +
+                        "name" +
+                        "}}" +
+                        "}" +
+                        "}" +
                         "\"" +
-                "}";
+                        "}";
 
         given()
                 .body(requestBody)
                 .post("/graphql/")
                 .then()
                 .contentType(ContentType.JSON)
-                .body("data.size()", is(1))
-                .body("data.film.title", containsString("Hope"))
-                .body("data.film.director", is("George Lucas"))
-                .body("data.film.heroes.name", hasItem("Luke"))
+                .body("data.Films.size()", is(1))
+                .body("data.Films.film.title", containsString("Hope"))
+                .body("data.Films.film.director", is("George Lucas"))
+                .body("data.Films.film.heroes.name", hasItem("Luke"))
                 .statusCode(200);
     }
 
@@ -104,22 +115,23 @@ public class FilmResourceTest {
         String requestBody =
                 "{\"query\":" +
                         "\"" +
-                                "mutation addHero { " +
-                                       "createHero" +
-                                            "(hero: " +
-                                                "{"+
-                                                    "name: \\\"Han\\\" " +
-                                                    "surname: \\\"Solo\\\" " +
-                                                    "height: 1.85" +
-                                                "}" +
-                                            ")" +
-                                            "{" +
-                                                "name " +
-                                                "surname" +
-                                            "}" +
-                                "}" +
+                        "mutation Films { addHero { " +
+                        "createHero" +
+                        "(hero: " +
+                        "{" +
+                        "name: \\\"Han\\\" " +
+                        "surname: \\\"Solo\\\" " +
+                        "height: 1.85" +
+                        "}" +
+                        ")" +
+                        "{" +
+                        "name " +
+                        "surname" +
+                        "}" +
+                        "}" +
+                        "}" +
                         "\"" +
-                "}";
+                        "}";
 
         given()
                 .body(requestBody)
@@ -127,8 +139,8 @@ public class FilmResourceTest {
                 .post("/graphql/")
                 .then()
                 .contentType(ContentType.JSON)
-                .body("data.createHero.name", is("Han"))
-                .body("data.createHero.surname", is("Solo"))
+                .body("data.Films.createHero.name", is("Han"))
+                .body("data.Films.createHero.surname", is("Solo"))
                 .statusCode(200);
 
     }
@@ -140,16 +152,17 @@ public class FilmResourceTest {
         String requestBody =
                 "{\"query\":" +
                         "\"" +
-                            "mutation DeleteHero { " +
-                                       "deleteHero" +
-                                            "(id: 3)" +
-                                            "{" +
-                                                "name " +
-                                                "surname" +
-                                            "}" +
-                                "}" +
+                        "mutation Films { DeleteHero { " +
+                        "deleteHero" +
+                        "(id: 3)" +
+                        "{" +
+                        "name " +
+                        "surname" +
+                        "}" +
+                        "}" +
+                        "}" +
                         "\"" +
-                "}";
+                        "}";
 
         given()
                 .body(requestBody)
@@ -157,8 +170,8 @@ public class FilmResourceTest {
                 .post("/graphql/")
                 .then()
                 .contentType(ContentType.JSON)
-                .body("data.deleteHero.name", is("Han"))
-                .body("data.deleteHero.surname", is("Solo"))
+                .body("data.Films.deleteHero.name", is("Han"))
+                .body("data.Films.deleteHero.surname", is("Solo"))
                 .statusCode(200);
 
     }
