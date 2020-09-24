@@ -60,8 +60,8 @@ public class GalaxyService {
         returnOfTheJediBook.setAuthor("George Lucas");
 
         books.add(aNewHopeBook);
-        books.add(aNewHopeBook);
-        books.add(aNewHopeBook);
+        books.add(theEmpireStrikesBackBook);
+        books.add(returnOfTheJediBook);
 
         
         Hero luke = new Hero();
