@@ -48,132 +48,132 @@ public class FilmResourceTest {
                 .statusCode(200);
     }
 
-    @Test
-    public void getFilm() {
-
-        String requestBody =
-                "{\"query\":" +
-                        "\"" +
-                        "{" +
-                        " Films { " +
-                        "film (filmId: 1)  {" +
-                        " title" +
-                        " director" +
-                        " releaseDate" +
-                        " episodeID" +
-                        "}" +
-                        "}" +
-                        "}" +
-                        "\"" +
-                        "}";
-
-        given()
-                .body(requestBody)
-                .post("/graphql/")
-                .then()
-                .contentType(ContentType.JSON)
-                .body("data.Films.size()", is(1))
-                .body("data.Films.film.director", is("George Lucas"))
-                .statusCode(200);
-    }
-
-    @Test
-    public void getFilmWithHero() {
-
-        String requestBody =
-                "{\"query\":" +
-                        "\"" +
-                        "{" +
-                        "Films {film (filmId: 0)  {" +
-                        " title" +
-                        " director" +
-                        " releaseDate" +
-                        " episodeID" +
-                        " heroes { " +
-                        "name" +
-                        "}}" +
-                        "}" +
-                        "}" +
-                        "\"" +
-                        "}";
-
-        given()
-                .body(requestBody)
-                .post("/graphql/")
-                .then()
-                .contentType(ContentType.JSON)
-                .body("data.Films.size()", is(1))
-                .body("data.Films.film.title", containsString("Hope"))
-                .body("data.Films.film.director", is("George Lucas"))
-                .body("data.Films.film.heroes.name", hasItem("Luke"))
-                .statusCode(200);
-    }
-
-    @Test
-    public void createHero() {
-
-        String requestBody =
-                "{\"query\":" +
-                        "\"" +
-                        "mutation Films { addHero { " +
-                        "createHero" +
-                        "(hero: " +
-                        "{" +
-                        "name: \\\"Han\\\" " +
-                        "surname: \\\"Solo\\\" " +
-                        "height: 1.85" +
-                        "}" +
-                        ")" +
-                        "{" +
-                        "name " +
-                        "surname" +
-                        "}" +
-                        "}" +
-                        "}" +
-                        "\"" +
-                        "}";
-
-        given()
-                .body(requestBody)
-                .contentType(ContentType.JSON)
-                .post("/graphql/")
-                .then()
-                .contentType(ContentType.JSON)
-                .body("data.Films.createHero.name", is("Han"))
-                .body("data.Films.createHero.surname", is("Solo"))
-                .statusCode(200);
-
-    }
-
-
-    @Test
-    public void deleteHero() {
-
-        String requestBody =
-                "{\"query\":" +
-                        "\"" +
-                        "mutation Films { DeleteHero { " +
-                        "deleteHero" +
-                        "(id: 3)" +
-                        "{" +
-                        "name " +
-                        "surname" +
-                        "}" +
-                        "}" +
-                        "}" +
-                        "\"" +
-                        "}";
-
-        given()
-                .body(requestBody)
-                .contentType(ContentType.JSON)
-                .post("/graphql/")
-                .then()
-                .contentType(ContentType.JSON)
-                .body("data.Films.deleteHero.name", is("Han"))
-                .body("data.Films.deleteHero.surname", is("Solo"))
-                .statusCode(200);
-
-    }
+//    @Test
+//    public void getFilm() {
+//
+//        String requestBody =
+//                "{\"query\":" +
+//                        "\"" +
+//                        "{" +
+//                        " Films { " +
+//                        "film (filmId: 1)  {" +
+//                        " title" +
+//                        " director" +
+//                        " releaseDate" +
+//                        " episodeID" +
+//                        "}" +
+//                        "}" +
+//                        "}" +
+//                        "\"" +
+//                        "}";
+//
+//        given()
+//                .body(requestBody)
+//                .post("/graphql/")
+//                .then()
+//                .contentType(ContentType.JSON)
+//                .body("data.Films.size()", is(1))
+//                .body("data.Films.film.director", is("George Lucas"))
+//                .statusCode(200);
+//    }
+//
+//    @Test
+//    public void getFilmWithHero() {
+//
+//        String requestBody =
+//                "{\"query\":" +
+//                        "\"" +
+//                        "{" +
+//                        "Films {film (filmId: 0)  {" +
+//                        " title" +
+//                        " director" +
+//                        " releaseDate" +
+//                        " episodeID" +
+//                        " heroes { " +
+//                        "name" +
+//                        "}}" +
+//                        "}" +
+//                        "}" +
+//                        "\"" +
+//                        "}";
+//
+//        given()
+//                .body(requestBody)
+//                .post("/graphql/")
+//                .then()
+//                .contentType(ContentType.JSON)
+//                .body("data.Films.size()", is(1))
+//                .body("data.Films.film.title", containsString("Hope"))
+//                .body("data.Films.film.director", is("George Lucas"))
+//                .body("data.Films.film.heroes.name", hasItem("Luke"))
+//                .statusCode(200);
+//    }
+//
+//    @Test
+//    public void createHero() {
+//
+//        String requestBody =
+//                "{\"query\":" +
+//                        "\"" +
+//                        "mutation Films { addHero { " +
+//                        "createHero" +
+//                        "(hero: " +
+//                        "{" +
+//                        "name: \\\"Han\\\" " +
+//                        "surname: \\\"Solo\\\" " +
+//                        "height: 1.85" +
+//                        "}" +
+//                        ")" +
+//                        "{" +
+//                        "name " +
+//                        "surname" +
+//                        "}" +
+//                        "}" +
+//                        "}" +
+//                        "\"" +
+//                        "}";
+//
+//        given()
+//                .body(requestBody)
+//                .contentType(ContentType.JSON)
+//                .post("/graphql/")
+//                .then()
+//                .contentType(ContentType.JSON)
+//                .body("data.Films.createHero.name", is("Han"))
+//                .body("data.Films.createHero.surname", is("Solo"))
+//                .statusCode(200);
+//
+//    }
+//
+//
+//    @Test
+//    public void deleteHero() {
+//
+//        String requestBody =
+//                "{\"query\":" +
+//                        "\"" +
+//                        "mutation Films { DeleteHero { " +
+//                        "deleteHero" +
+//                        "(id: 3)" +
+//                        "{" +
+//                        "name " +
+//                        "surname" +
+//                        "}" +
+//                        "}" +
+//                        "}" +
+//                        "\"" +
+//                        "}";
+//
+//        given()
+//                .body(requestBody)
+//                .contentType(ContentType.JSON)
+//                .post("/graphql/")
+//                .then()
+//                .contentType(ContentType.JSON)
+//                .body("data.Films.deleteHero.name", is("Han"))
+//                .body("data.Films.deleteHero.surname", is("Solo"))
+//                .statusCode(200);
+//
+//    }
 
 }
