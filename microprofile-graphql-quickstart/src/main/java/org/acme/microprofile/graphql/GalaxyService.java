@@ -15,6 +15,8 @@ public class GalaxyService {
 
     private List<Film> films = new ArrayList<>();
 
+    private List<Book> books = new ArrayList<>();
+    
     public GalaxyService() {
 
         Film aNewHope = new Film();
@@ -39,6 +41,29 @@ public class GalaxyService {
         films.add(theEmpireStrikesBack);
         films.add(returnOfTheJedi);
 
+        Book aNewHopeBook = new Book();
+        aNewHopeBook.setTitle("A New Hope");
+        aNewHopeBook.setReleaseDate(LocalDate.of(1977, Month.MAY, 25));
+        aNewHopeBook.setISDN(4);
+        aNewHopeBook.setAuthor("George Lucas");
+
+        Book theEmpireStrikesBackBook = new Book();
+        theEmpireStrikesBackBook.setTitle("The Empire Strikes Back");
+        theEmpireStrikesBackBook.setReleaseDate(LocalDate.of(1980, Month.MAY, 21));
+        theEmpireStrikesBackBook.setISDN(5);
+        theEmpireStrikesBackBook.setAuthor("George Lucas");
+
+        Book returnOfTheJediBook = new Book();
+        returnOfTheJediBook.setTitle("Return Of The Jedi");
+        returnOfTheJediBook.setReleaseDate(LocalDate.of(1983, Month.MAY, 25));
+        returnOfTheJediBook.setISDN(6);
+        returnOfTheJediBook.setAuthor("George Lucas");
+
+        books.add(aNewHopeBook);
+        books.add(aNewHopeBook);
+        books.add(aNewHopeBook);
+
+        
         Hero luke = new Hero();
         luke.setName("Luke");
         luke.setSurname("Skywalker");
@@ -80,6 +105,14 @@ public class GalaxyService {
         return films.get(id);
     }
 
+    public List<Book> getAllBooks() {
+        return books;
+    }
+
+    public Book getBook(int id) {
+        return books.get(id);
+    }
+    
     public List<Hero> getHeroesByFilm(Film film) {
         return heroes.stream()
                 .filter(hero -> hero.getEpisodeIds().contains(film.getEpisodeID()))
